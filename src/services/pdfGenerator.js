@@ -142,11 +142,6 @@ export const generatePDF = async (formData, photos) => {
             doc.rect(xPos, pY, pWidth, pHeight + 10);
 
             // Label
-            doc.setFontSize(9);
-            doc.setTextColor(0);
-            doc.setFont("helvetica", "bold");
-            doc.text(label, xPos + 2, pY + pHeight + 6);
-
             try {
                 const base64 = await getBase64FromUrl(photoUrl);
                 // Fit image maintaining aspect ratio within box

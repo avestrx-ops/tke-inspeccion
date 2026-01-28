@@ -1,241 +1,228 @@
-/* Basic container tweaks */
+/* Main Container Layout */
 .container {
+  width: 100%;
+  max-width: 1400px;
+  /* Brand guideline: 1200-1400px */
+  margin: 0 auto;
   padding-bottom: 120px;
-  /* Space for floating bar */
+  background-color: var(--tke-gray-bg);
+}
+
+/* HERO SECTION - The "Wow" Factor */
+.header {
+  background: var(--gradient-brand);
+  color: white;
+  padding: 80px 2rem 60px 2rem;
+  /* Generous padding */
+  text-align: center;
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+  /* Subtle geometric angle */
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  color: white;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.header p.subtitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+/* "L" Shape Decoration (Pseudo-element) */
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  border-top: 10px solid rgba(255, 255, 255, 0.2);
+  border-left: 10px solid rgba(255, 255, 255, 0.2);
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  border-bottom: 10px solid var(--tke-orange);
+  border-right: 10px solid var(--tke-orange);
+}
+
+/* Quality Reminder Box - Styled as "White Card" overlap */
+.quality-reminder {
+  background: white;
+  color: var(--text-main);
+  max-width: 900px;
+  margin: -40px auto 2rem auto;
+  /* Overlap effect */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  border-top: 4px solid var(--tke-orange);
+}
+
+.quality-reminder h3 {
+  color: var(--tke-purple);
+  margin-top: 0;
+}
+
+.quality-reminder ul {
+  list-style: none;
+  /* Custom bullets */
+  padding: 0;
+}
+
+.quality-reminder li {
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.8rem;
+}
+
+.quality-reminder li::before {
+  content: "•";
+  color: var(--tke-orange);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
 }
 
 /* Progress Bar */
 .progress-bar-bg {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  margin-top: 2rem;
+  border-radius: 3px;
   width: 100%;
-  height: 8px;
-  background-color: var(--border-color);
-  border-radius: 4px;
-  margin: 1rem 0 0.5rem 0;
-  overflow: hidden;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background-color: var(--primary);
-  transition: width 0.5s ease-out;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .progress-text {
+  color: white;
   font-size: 0.9rem;
-  color: var(--text-muted);
+  margin-top: 0.5rem;
 }
 
-/* Section Cards */
+/* FORMS SECTIONS */
 .form-sections {
+  padding: 0 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  /* 20-40px spacing */
 }
 
 .section-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  background: white;
+  border: none;
+  border-radius: 0;
+  /* Corporate constraint: squared or slight 4px radius */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .section-card.expanded {
-  border-color: var(--primary);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.section-header {
-  padding: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.02);
-}
-
-.section-header:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.section-title h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.check-icon {
-  color: #10b981;
-  /* Green */
-}
-
-.section-content {
-  padding: 1.5rem;
-  border-top: 1px solid var(--border-color);
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Photo Upload Specifics */
-.photo-upload-area {
-  margin-bottom: 2rem;
-}
-
-.photo-label {
-  display: flex;
-  width: 100%;
-  height: 200px;
-  border: 2px dashed var(--border-color);
-  border-radius: 12px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.2s;
-}
-
-.photo-label:hover {
-  border-color: var(--primary);
-  background-color: rgba(37, 99, 235, 0.05);
-  /* Primary tint */
-}
-
-.photo-placeholder {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  color: var(--text-muted);
-}
-
-.photo-preview-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.photo-preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.photo-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  opacity: 0;
-  transition: opacity 0.2s;
-  gap: 0.5rem;
-  font-weight: 500;
-}
-
-.photo-preview-container:hover .photo-overlay {
-  opacity: 1;
-}
-
-/* Fields Grid */
-.fields-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-@media (min-width: 600px) {
-  .fields-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .full-width {
-    grid-column: span 2;
-  }
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: left;
-}
-
-.form-group label {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-/* Floating Actions */
-.floating-actions {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1.5rem;
-  background: rgba(15, 23, 42, 0.9);
-  /* Dark bg, slightly transparent */
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  z-index: 50;
-}
-
-.primary-btn,
-.secondary-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: transform 0.2s;
-  border: none;
-}
-
-.primary-btn {
-  background-color: var(--primary);
-  color: white;
-  flex: 2;
-  justify-content: center;
-}
-
-.primary-btn:hover {
-  background-color: var(--primary-hover);
+  border-left: 5px solid var(--tke-purple);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
+.section-header {
+  padding: 1.5rem 2rem;
+  background-color: white;
+}
+
+.section-header:hover {
+  background-color: #fcfcfc;
+}
+
+.section-title h3 {
+  color: var(--tke-purple);
+  margin: 0;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* BUTTONS */
+.primary-btn {
+  background-color: white;
+  /* Per guidelines: White bg, Purple text */
+  color: var(--tke-purple);
+  border: 2px solid var(--tke-purple);
+  border-radius: 6px;
+  /* 4-8px radius */
+  padding: 1rem 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.primary-btn:hover {
+  background-color: var(--tke-purple);
+  color: white;
+  box-shadow: 0 6px 12px rgba(107, 29, 119, 0.2);
+}
+
 .secondary-btn {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  color: var(--text-light);
-  flex: 1;
-  justify-content: center;
+  background-color: transparent;
+  color: var(--tke-black);
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .secondary-btn:hover {
-  background-color: var(--border-color);
+  background-color: #f0f0f0;
+  border-color: var(--tke-black);
+}
+
+/* Photo Upload Areas */
+.photo-label {
+  border: 2px dashed #ddd;
+  /* Neutral */
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+.photo-label:hover {
+  border-color: var(--tke-orange);
+  /* Accent color on interaction */
+  background-color: rgba(255, 127, 0, 0.05);
+}
+
+/* Footer / Floating Actions */
+.floating-actions {
+  background: var(--tke-black);
+  /* Neutral Dark for footer nav */
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Photo Icon in header */
+.quality-icon {
+  color: var(--tke-orange);
+  margin-right: 10px;
 }

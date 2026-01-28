@@ -148,6 +148,17 @@ function App() {
     <div className="container" style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
       <header className="header">
         <h1>Ficha de Inspección TKE</h1>
+
+        {/* Recordatorio de calidad */}
+        <div className="quality-reminder">
+          <h3><Camera size={20} /> Guía de Calidad Fotográfica</h3>
+          <ul>
+            <li><strong>2. Perspectiva y Profundidad:</strong> Las fotos deben demostrar que el espacio es viable geométricamente.</li>
+            <li><strong>3. Iluminación y Legibilidad:</strong> Asegúrate de que los detalles sean nítidos. Usa flash si es necesario.</li>
+            <li>Evita fotos borrosas o movidas. La IA y el reporte dependen de la claridad.</li>
+          </ul>
+        </div>
+
         <div className="progress-bar-bg">
           <div className="progress-bar-fill" style={{ width: `${calculateProgress()}%` }}></div>
         </div>
@@ -244,7 +255,7 @@ function App() {
           onClick={handleGenerate}
           disabled={isGenerating}
         >
-          {isGenerating ? 'Generando...' : <><Send size={20} /> Generar Informe</>}
+          {isGenerating ? 'Generando...' : <><Send size={20} /> Generar Informe (Borrador o Final)</>}
         </button>
       </div>
     </div>
