@@ -103,12 +103,27 @@ function App() {
   const [photos, setPhotos] = useState({});
   const [expandedSection, setExpandedSection] = useState('general');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [errors, setErrors] = useState({}); // Stores IDs of missing required fields
+
+  // Define required fields for validation
+  const REQUIRED_FIELDS = [
+    'general.obra', 'general.fecha', 'general.tecnico',
+    // Add logic for photo requirements if needed, e.g., 'maquinas' in photos
+  ];
 
   const handleInputChange = (sectionId, fieldId, value) => {
     setFormData(prev => ({
       ...prev,
       [`${sectionId}.${fieldId}`]: value
     }));
+    // Clear error if exists
+    if (errors[`${sectionId}.${fieldId}`]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[`${sectionId}.${fieldId}`];
+        return newErrors;
+      });
+    }
   };
 
   const handlePhotoUpload = (sectionId, event) => {
@@ -125,7 +140,35 @@ function App() {
     setExpandedSection(expandedSection === id ? null : id);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    // Validate fields
+    SECTIONS.forEach(section => {
+      section.fields.forEach(field => {
+        // Simple logic for crucial fields, or you can use a required flag in SECTIONS definition
+        const key = `${section.id}.${field.id}`;
+        // Example: Only GENERAL section is strictly required for draft
+        if (section.id === 'general' && !formData[key]) {
+          newErrors[key] = true;
+          isValid = false;
+        }
+      });
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleGenerate = async () => {
+    const isValid = validateForm();
+
+    if (!isValid) {
+      const confirmDraft = window.confirm("Faltan campos obligatorios marcados en rojo. ¿Quieres generar un BORRADOR incompleto?");
+      if (!confirmDraft) return;
+    }
+
     setIsGenerating(true);
     try {
       await generatePDF(formData, photos);
@@ -148,21 +191,17 @@ function App() {
     <div className="container" style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '100px' }}>
       <header className="header">
         <h1>Ficha de Inspección TKE</h1>
+        <p className="subtitle" style={{ marginBottom: '3rem' }}>Herramienta de Auditoría y Reporte</p>
 
         {/* Recordatorio de calidad */}
         <div className="quality-reminder">
-          <h3><Camera size={20} /> Guía de Calidad Fotográfica</h3>
+          <h3><Camera size={20} className="quality-icon" /> Guía de Calidad Fotográfica</h3>
           <ul>
-            <li><strong>2. Perspectiva y Profundidad:</strong> Las fotos deben demostrar que el espacio es viable geométricamente.</li>
-            <li><strong>3. Iluminación y Legibilidad:</strong> Asegúrate de que los detalles sean nítidos. Usa flash si es necesario.</li>
-            <li>Evita fotos borrosas o movidas. La IA y el reporte dependen de la claridad.</li>
+            <li>Perspectiva y Profundidad: Las fotos deben demostrar que el espacio es viable geométricamente.</li>
+            <li>Iluminación y Legibilidad: Asegúrate de que los detalles sean nítidos. Usa flash si es necesario.</li>
+            <li>Evita fotos borrosas o movidas. El reporte depende de la claridad.</li>
           </ul>
         </div>
-
-        <div className="progress-bar-bg">
-          <div className="progress-bar-fill" style={{ width: `${calculateProgress()}%` }}></div>
-        </div>
-        <p className="progress-text">{calculateProgress()}% Completado</p>
       </header>
 
       <div className="form-sections">
@@ -213,13 +252,19 @@ function App() {
                       if (depValue !== field.dependsOn.value) return null;
                     }
 
+                    const fieldKey = `${section.id}.${field.id}`;
+                    const hasError = errors[fieldKey];
+
                     return (
                       <div key={field.id} className={`form-group ${field.type === 'textarea' ? 'full-width' : ''}`}>
-                        <label>{field.label}</label>
+                        <label style={{ color: hasError ? 'red' : 'inherit' }}>
+                          {field.label} {hasError && '*'}
+                        </label>
                         {field.type === 'select' ? (
                           <select
                             onChange={(e) => handleInputChange(section.id, field.id, e.target.value)}
-                            value={formData[`${section.id}.${field.id}`] || ''}
+                            value={formData[fieldKey] || ''}
+                            style={{ borderColor: hasError ? 'red' : '' }}
                           >
                             <option value="">Seleccionar...</option>
                             {field.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -228,14 +273,16 @@ function App() {
                           <textarea
                             rows="3"
                             onChange={(e) => handleInputChange(section.id, field.id, e.target.value)}
-                            value={formData[`${section.id}.${field.id}`] || ''}
+                            value={formData[fieldKey] || ''}
+                            style={{ borderColor: hasError ? 'red' : '' }}
                           />
                         ) : (
                           <input
                             type={field.type}
                             placeholder={field.placeholder}
                             onChange={(e) => handleInputChange(section.id, field.id, e.target.value)}
-                            value={formData[`${section.id}.${field.id}`] || ''}
+                            value={formData[fieldKey] || ''}
+                            style={{ borderColor: hasError ? 'red' : '' }}
                           />
                         )}
                       </div>
@@ -249,13 +296,13 @@ function App() {
       </div>
 
       <div className="floating-actions">
-        <button className="secondary-btn"><Save size={20} /> Guardar Borrador</button>
+        <button className="secondary-btn"><Save size={20} /> Borrador</button>
         <button
           className="primary-btn"
           onClick={handleGenerate}
           disabled={isGenerating}
         >
-          {isGenerating ? 'Generando...' : <><Send size={20} /> Generar Informe (Borrador o Final)</>}
+          {isGenerating ? 'Generando...' : <><Send size={20} /> Generar Informe</>}
         </button>
       </div>
     </div>
